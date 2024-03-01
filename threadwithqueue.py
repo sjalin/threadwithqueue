@@ -8,6 +8,7 @@ import _queue
 class ThreadWithQueue(Thread):
     def __init__(self):
         self.log = logging.getLogger(self.__class__.__name__)
+        logging.basicConfig(level=logging.INFO)
         self.log.info(f'Init')
         self._message_queue: SimpleQueue = SimpleQueue()
 
