@@ -1,4 +1,5 @@
 import logging
+from logging.handlers import TimedRotatingFileHandler
 from queue import SimpleQueue
 from threading import Thread
 
@@ -6,11 +7,18 @@ import _queue
 
 
 class ThreadWithQueue(Thread):
-    def __init__(self):
+    def __init__(self, log_to_file=False):
         self.log = logging.getLogger(self.__class__.__name__)
         logging.basicConfig(level=logging.INFO)
         self.log.info(f'Init')
         self._message_queue: SimpleQueue = SimpleQueue()
+
+        if log_to_file:
+            handler = TimedRotatingFileHandler('log.log', when='midnight', backupCount=30)
+            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            handler.setFormatter(formatter)
+            self.log.addHandler(handler)
+
 
         super().__init__()
 
